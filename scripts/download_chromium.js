@@ -40,8 +40,12 @@ browserFetcher
 
     if (platform === 'mac' && arch === 'arm64') {
         // follow symlinks, dereference symlinks and copy them as files
+        child_process.execSync(`cp -LR ${execPath} ${outputPath}`);
+
         const dsStorePath = `${outputPath}/${parts[parts.length - 1]}/.DS_Store`;
-        child_process.execSync(`rm ${dsStorePath} && touch ${dsStorePath}`)
+        if (!fs.existsSync(dsStorePath)) {
+            child_process.execSync(`touch ${dsStorePath}`)
+        }
     } else {
         // follow symlinks, copy them as symlinks
         child_process.execSync(`cp -RP ${execPath} ${outputPath}`);
