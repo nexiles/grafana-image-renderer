@@ -2,6 +2,7 @@ const path = require('path');
 const child_process = require('child_process');
 const Puppeteer = require('puppeteer');
 const { PUPPETEER_REVISIONS } = require('puppeteer/lib/cjs/puppeteer/revisions')
+const fs = require('fs')
 
 const archArg = process.argv[2];
 let [
@@ -39,7 +40,8 @@ browserFetcher
 
     if (platform === 'mac' && arch === 'arm64') {
         // follow symlinks, dereference symlinks and copy them as files
-        child_process.execSync(`cp -LR ${execPath} ${outputPath}`);
+        const dsStorePath = `${outputPath}/${parts[parts.length - 1]}/.DS_Store`;
+        child_process.execSync(`rm ${dsStorePath} && touch ${dsStorePath}`)
     } else {
         // follow symlinks, copy them as symlinks
         child_process.execSync(`cp -RP ${execPath} ${outputPath}`);
